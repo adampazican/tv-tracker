@@ -1,0 +1,42 @@
+entry{
+    border: none;
+    outline: none;
+    color: red;
+}
+
+label{
+    padding: 0px;
+}
+
+.show-info {
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: -20px;
+}
+
+.info-box{
+    margin-top: -25px;
+}
+
+.info-box button{
+    margin-top: 20px;
+}
+
+.sidebar .row{
+    padding: 8px;
+}
+
+.show-info .summary{
+    padding-bottom: 0;
+}
+
+.show-info .summary + label{
+    padding-top: 0;
+}
+
+
+
+.no-padding{
+    padding: 0;
+}
+

@@ -7,10 +7,13 @@ import os
 
 class ShowInfo(Gtk.Box):
     id = 0
+    subscribed = True
 
-    def __init__(self):
+    def __init__(self, store):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.get_style_context().add_class("show-info")
+
+        self.store = store
 
         wrapper = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         wrapper.set_spacing(8)
@@ -49,10 +52,10 @@ class ShowInfo(Gtk.Box):
         info_box.pack_start(self.summary, False, False, 0)
         info_box.pack_start(subscription, False, False, 0)
 
-        seasons = Seasons()
+        self.seasons = Seasons()
 
         self.pack_start(wrapper, True, True, 0)
-        self.pack_start(seasons, True, True, 0)
+        self.pack_start(self.seasons, True, True, 0)
 
     def set_id(self, value):
         self.id = value
@@ -74,6 +77,19 @@ class ShowInfo(Gtk.Box):
     def set_genre(self, value):
         genres_unlistified = re.sub(r"\[?']?", "", str(value))
         self.genre.set_label("Genre: %s" % genres_unlistified)
+
+    def set_episodes(self, value):
+        seasons = {}
+
+        for episode in value:
+            season_number = episode["season"]
+            
+            if not season_number in seasons:
+                seasons[season_number] = [episode]
+            else:
+                seasons[season_number].append(episode)
+
+        self.seasons.set_episodes(seasons)
 
     def getImage(self):
         if os.path.exists("cache/%i.jpg" % self.id):

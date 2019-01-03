@@ -4,37 +4,38 @@ class Seasons(Gtk.Box):
     def __init__(self):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
-        stack = Gtk.Stack()
-        stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+        self.stack = Gtk.Stack()
+        self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+
+        self.stack_switcher = Gtk.StackSwitcher()
+        self.stack_switcher.set_stack(self.stack)
+
+
+        self.pack_start(self.stack_switcher, False, False, 0)
+        self.pack_start(self.stack, False, False, 0)
+
+    def set_episodes(self, data):
+        self.reset()
+        #episode_list.connect("row_selected", on_item_select)
+        #episode_list.connect("row_activated", on_item_click)
         
-        season1 = self.init_season(None)
-        
+        for season_number, episodes in data.items():
+            box = Gtk.Box()
+            episode_list = Gtk.ListBox()
+            episode_list.set_selection_mode(Gtk.SelectionMode.MULTIPLE)
 
-        stack.add_titled(season1, "Season 1", "Season 1")
-        stack.add_titled(Gtk.Label("Season 2"), "Season 2", "Season 2")
+            for episode in episodes:
+                label = Gtk.Label(episode["name"], halign=Gtk.Align.START)
+                label.show()
+                episode_list.add(label)
+                episode_list.show()
+            box.pack_start(episode_list, True, True, 0)
+            box.show()
+            self.stack.add_titled(box, "Season %i" % season_number, "Season %i" % season_number)
 
-        stack_switcher = Gtk.StackSwitcher()
-        stack_switcher.set_stack(stack)
-
-        self.pack_start(stack_switcher, False, False, 4)
-        self.pack_start(stack, False, False, 0)
-
-    def init_season(self, data):
-        box = Gtk.Box()
-
-        episode_list = Gtk.ListBox()
-        episode_list.set_selection_mode(Gtk.SelectionMode.MULTIPLE)
-        episode_list.connect("row_selected", self.on_item_select)
-        episode_list.connect("row_activated", self.on_item_click)
-
-        episoda = Gtk.Label("Episoda")
-        episoda.set_halign(Gtk.Align.START)
-        episode_list.add(episoda)
-        episode_list.add(Gtk.Label("Episoda"))
-        episode_list.add(Gtk.Label("Episoda"))
-
-        box.pack_start(episode_list, True, True, 0)
-        return box
+    def reset(self):
+        for child in self.stack.get_children():
+            self.stack.remove(child)
 
     def on_item_select(self, list_box, list_box_row):
         pass

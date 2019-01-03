@@ -30,7 +30,7 @@ class Application(Gtk.Window):
         sidebar.connect("notify::selected-show", self.on_navigation_change)
 
         separator = Gtk.Separator()
-        self.mainframe = ShowInfo()
+        self.mainframe = ShowInfo(self.store)
 
         box.pack_start(sidebar, False, False, 0)
         box.pack_start(separator, False, False, 0)
@@ -47,6 +47,7 @@ class Application(Gtk.Window):
         self.mainframe.set_rating(selected_show["rating"]["average"])
         self.mainframe.set_summary(selected_show["summary"])
         self.mainframe.set_genre(selected_show["genres"])
+        self.mainframe.set_episodes(selected_show["episodes"])
 
     def load_css(self):
         style_provider = Gtk.CssProvider()

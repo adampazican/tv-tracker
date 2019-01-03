@@ -1,8 +1,8 @@
 from gi.repository import Gtk
 
-class Seasons(Gtk.VBox):
+class Seasons(Gtk.Box):
     def __init__(self):
-        Gtk.Box.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         stack = Gtk.Stack()
         stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)

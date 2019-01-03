@@ -5,20 +5,19 @@ from seasons import Seasons
 import re
 import os
 
-class ShowInfo(Gtk.VBox):
+class ShowInfo(Gtk.Box):
     id = 0
 
     def __init__(self):
-        Gtk.Box.__init__(self)
-
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.get_style_context().add_class("show-info")
 
-        wrapper = Gtk.HBox()
+        wrapper = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         wrapper.set_spacing(8)
         
-        info_box = Gtk.VBox()
+        info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         info_box.get_style_context().add_class("info-box")
-        info_box_wrapper = Gtk.VBox()
+        info_box_wrapper = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         info_box_wrapper.pack_start(info_box, True, False, 0)
 
         
@@ -33,7 +32,7 @@ class ShowInfo(Gtk.VBox):
         self.genre = Gtk.Label(halign=Gtk.Align.START)
         self.status = Gtk.Label(halign=Gtk.Align.START)
         self.rating = Gtk.Label(halign=Gtk.Align.START)
-        self.summ = Gtk.Label(halign=Gtk.Align.START)
+        self.summ = Gtk.Label("", halign=Gtk.Align.START)
         self.summ.get_style_context().add_class("summary")
         self.summary = Gtk.Label(halign=Gtk.Align.START)
         self.summary.set_line_wrap(True)
@@ -52,8 +51,8 @@ class ShowInfo(Gtk.VBox):
 
         seasons = Seasons()
 
-        self.add(wrapper)
-        self.add(seasons)
+        self.pack_start(wrapper, True, True, 0)
+        self.pack_start(seasons, True, True, 0)
 
     def set_id(self, value):
         self.id = value

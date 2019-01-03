@@ -22,9 +22,9 @@ class Sidebar(Gtk.ScrolledWindow):
 
     def add_items(self, show_names):
         for name in show_names:
-            row = Gtk.HBox()
+            row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             row.get_style_context().add_class("row")
-            row.pack_start(Gtk.Label(name), False, False, 0)
+            row.pack_start(Gtk.Label(name, halign=Gtk.Align.START), False, False, 0)
             self.__list_box.add(row)
         self.__list_box.select_row(
             self.__list_box.get_children()[1]

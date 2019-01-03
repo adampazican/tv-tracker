@@ -17,7 +17,7 @@ class Application(Gtk.Window):
         Gtk.Window.__init__(self)
         self.title = "DDD"
         self.connect("destroy", Gtk.main_quit)
-        self.set_default_size(800, 600)
+        self.set_default_size(1000, 600)
         self.load_css()
 
         self.store = Store()

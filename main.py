@@ -11,10 +11,6 @@ from store import Store
 def search_for_show(name):
     url = urlopen('http://api.tvmaze.com/search/shows?q=' + name).read()
     return json.loads(url.decode('utf-8'))
-#print(searchForShow('charlotte')[0]['show']['summary'])
-
-def clicked():
-    print("clicked")
 
 class Application(Gtk.Window):
     def __init__(self):
@@ -32,7 +28,6 @@ class Application(Gtk.Window):
         sidebar = Sidebar()
         sidebar.add_items(self.store.getShowNames())
         sidebar.connect("notify::selected-show", self.on_navigation_change)
-        #sidebar.on_navigation_change(self.on_navigation_change)
 
         separator = Gtk.Separator()
         self.mainframe = ShowInfo()
@@ -46,14 +41,12 @@ class Application(Gtk.Window):
         selected_show_name = sidebar.get_property("selected_show") 
         selected_show = self.store.getShowByName(selected_show_name)
 
-        self.mainframe.set_property("id_prop", selected_show["id"])
-
+        self.mainframe.set_id(selected_show["id"])
         self.mainframe.set_name(selected_show["name"])
         self.mainframe.set_status(selected_show["status"])
         self.mainframe.set_rating(selected_show["rating"]["average"])
         self.mainframe.set_summary(selected_show["summary"])
-
-        #self.mainframe = ShowInfo(selected_show)
+        self.mainframe.set_genre(selected_show["genres"])
 
     def load_css(self):
         style_provider = Gtk.CssProvider()

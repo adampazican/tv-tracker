@@ -26,6 +26,9 @@ class Sidebar(Gtk.ScrolledWindow):
             row.get_style_context().add_class("row")
             row.pack_start(Gtk.Label(name), False, False, 0)
             self.__list_box.add(row)
+        self.__list_box.select_row(
+            self.__list_box.get_children()[1]
+        )
 
     def onItemSelect(self, list_box, list_box_row):
         self.selected_show = list_box_row.get_child().get_children()[0].get_label()

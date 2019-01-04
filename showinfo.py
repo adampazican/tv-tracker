@@ -54,9 +54,19 @@ class ShowInfo(Gtk.Box):
         info_box.pack_start(subscription, False, False, 0)
 
         self.seasons = Seasons()
+        self.seasons.connect("episode_selected", self.on_episode_selected)
 
         self.pack_start(wrapper, False, True, 0)
         self.pack_start(self.seasons, True, True, 0)
+
+    def on_episode_selected(self, seasons, episode_name):
+        episode_watched = self.store.get_episode_watched(self.store.getShowById(self.id)["name"], episode_name)
+
+        self.store.set_episode_watched(
+            self.store.getShowById(self.id)["name"],
+            episode_name,
+            not episode_watched
+        )
 
     def set_id(self, value):
         self.id = value
@@ -79,10 +89,10 @@ class ShowInfo(Gtk.Box):
         genres_unlistified = re.sub(r"\[?']?", "", str(value))
         self.genre.set_label("Genre: %s" % genres_unlistified)
 
-    def set_episodes(self, value):
+    def set_episodes(self, episodes):
         seasons = {}
 
-        for episode in value:
+        for episode in episodes:
             season_number = episode["season"]
             
             if not season_number in seasons:

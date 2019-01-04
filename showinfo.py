@@ -59,8 +59,13 @@ class ShowInfo(Gtk.Box):
         self.pack_start(wrapper, False, True, 0)
         self.pack_start(self.seasons, True, True, 0)
 
-    def on_episode_selected(self, seasons, episode_name):
+    def on_episode_selected(self, seasons, episode_name, list_box, list_box_row):
         episode_watched = self.store.get_episode_watched(self.store.getShowById(self.id)["name"], episode_name)
+
+        if not episode_watched:
+            list_box.select_row(list_box_row)
+        else:
+            list_box.unselect_row(list_box_row)
 
         self.store.set_episode_watched(
             self.store.getShowById(self.id)["name"],

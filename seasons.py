@@ -2,7 +2,7 @@ from gi.repository import Gtk, GObject
 
 class Seasons(Gtk.Box):
     __gsignals__ = {
-        "episode_selected": (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        "episode_selected": (GObject.SIGNAL_RUN_FIRST, None, (str, Gtk.ListBox, Gtk.ListBoxRow))
     }
 
     def __init__(self):
@@ -29,6 +29,7 @@ class Seasons(Gtk.Box):
             scrolled = Gtk.ScrolledWindow()
 
             episode_list = Gtk.ListBox()
+            episode_list.set_activate_on_single_click(True)
             episode_list.set_selection_mode(Gtk.SelectionMode.MULTIPLE)
             episode_list.connect("row_activated", self.on_item_click)
 
@@ -40,7 +41,7 @@ class Seasons(Gtk.Box):
                 label.show()
                 episode_list.add(label)
                 
-                if "watched" in episode:
+                if "watched" in episode and episode["watched"]:
                     episode_list.select_row(episode_list.get_children()[-1])
 
             self.stack.add_titled(scrolled, "Season %i" % season_number, "Season %i" % season_number)
@@ -49,22 +50,6 @@ class Seasons(Gtk.Box):
         for child in self.stack.get_children():
             self.stack.remove(child)
 
-    #list box row should represent store data, toggle episode watch in store and redraw(reselect) rows
     def on_item_click(self, list_box, list_box_row):
         episode_name = list_box_row.get_children()[0].get_label()
-        self.emit("episode_selected", episode_name)
-        
-        
-        '''
-        index = list_box_row.get_index()
-        selected_row = list_box.get_row_at_index(index)
-
-        if not list_box_row.is_selected():
-            print("jej")
-            for i in range(0, index):
-                list_box.select_row(
-                    list_box.get_row_at_index(i)
-                )
-        else:
-            list_box.unselect_row(selected_row)
-        '''
+        self.emit("episode_selected", episode_name, list_box, list_box_row)

@@ -14,8 +14,9 @@ label{
     margin-top: -20px;
 }
 
-.info-box{
-    margin-top: -25px;
+.info-box-wrapper{
+    margin-top: 40px;
+    padding-bottom: 25px;
 }
 
 .info-box button{

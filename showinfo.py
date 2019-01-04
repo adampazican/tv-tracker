@@ -16,6 +16,7 @@ class ShowInfo(Gtk.Box):
         self.store = store
 
         wrapper = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        wrapper.get_style_context().add_class("info-box-wrapper")
         wrapper.set_spacing(8)
         
         info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -54,7 +55,7 @@ class ShowInfo(Gtk.Box):
 
         self.seasons = Seasons()
 
-        self.pack_start(wrapper, True, True, 0)
+        self.pack_start(wrapper, False, True, 0)
         self.pack_start(self.seasons, True, True, 0)
 
     def set_id(self, value):

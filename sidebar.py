@@ -13,13 +13,13 @@ class Sidebar(Gtk.ScrolledWindow):
         self.__list_box.connect("row_selected", self.on_item_select)
         self.__list_box.get_style_context().add_class("sidebar")
 
-        search = Search(self.store)
-        search.connect("row_selected", self.on_search_select)
+        self.search = Search(self.store)
+        self.search.connect("row_selected", self.on_search_select)
 
         listbox_row = Gtk.ListBoxRow()
         listbox_row.set_selectable(False)
         
-        listbox_row.add(search)
+        listbox_row.add(self.search)
 
         self.__list_box.add(listbox_row)
 
@@ -38,9 +38,19 @@ class Sidebar(Gtk.ScrolledWindow):
         )
 
     def on_item_select(self, list_box, list_box_row):
-        self.selected_show = list_box_row.get_child().get_children()[0].get_label()
+        if list_box_row:
+            self.selected_show = list_box_row.get_child().get_children()[0].get_label()
+            self.unselect_list(self.search)
 
     def on_search_select(self, list_box, list_box_row):
-        show_name = list_box_row.get_child().get_children()[0].get_label()
-        self.store.get_episodes_for_show(show_name)
-        self.selected_show = show_name
+        if list_box_row:
+            show_name = list_box_row.get_child().get_children()[0].get_label()
+            self.store.get_episodes_for_show(show_name)
+            self.selected_show = show_name
+            self.unselect_list(self.__list_box)
+
+
+    def unselect_list(self, list_box):
+        for row in list_box.get_children():
+            if row.is_selected():
+                list_box.unselect_row(row)

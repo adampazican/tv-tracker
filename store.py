@@ -30,7 +30,10 @@ class Store():
         return list(filter(lambda x: x["name"] == name, self.temporary_data))[0]
     
     def getShowById(self, show_id):
-        return list(filter(lambda x: x["id"] == show_id, self.data))[0]
+        data = list(filter(lambda x: x["id"] == show_id, self.data))
+        if data:
+            return data[0]
+        return list(filter(lambda x: x["id"] == show_id, self.temporary_data))[0]
 
     def get_episode_watched(self, show_name, episode_name):
         for show in self.data:
@@ -64,7 +67,7 @@ class Store():
                 show["episodes"] = data
                 
                 if not os.path.exists("cache/%i.jpg" % show["id"]):
-                    self.cacheImage(show["image"]["original"], "cache/%i.jpg" % show["id"])
+                    self.cacheImage(show["image"]["medium"], "cache/%i.jpg" % show["id"])
                 break
 
 

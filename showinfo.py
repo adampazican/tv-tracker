@@ -84,7 +84,10 @@ class ShowInfo(Gtk.Box):
         self.status.set_label("Status: %s" % value)
 
     def set_rating(self, value):
-        self.rating.set_label("Rating: %.1f" % value)
+        if value:
+            self.rating.set_label("Rating: %.1f" % value)
+        else:
+            self.rating.set_label("Rating: none")
 
     def set_summary(self, value):
         summary_without_markdown = re.sub(r"<\/?[a-z+]>", "", value)
@@ -111,12 +114,3 @@ class ShowInfo(Gtk.Box):
         if os.path.exists("cache/%i.jpg" % self.id):
             pb = Pixbuf.new_from_file_at_scale(filename = "cache/%i.jpg" % self.id, width = 300, height = 300, preserve_aspect_ratio=True)
             self.image.set_from_pixbuf(pb)
-
-    #self.getImage(image, "https://static.tvmaze.com/uploads/images/original_untouched/167/418968.jpg", "image.jpg")
-    def cacheImage(self, image, url, name):
-        response = urlopen(url)
-        with open(name, "wb") as img:
-            img.write(response.read())
-        
-        pb = Pixbuf.new_from_file_at_scale(filename = name, width = 300, height = 300, preserve_aspect_ratio=True)
-        image.set_from_pixbuf(pb)

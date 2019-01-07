@@ -24,7 +24,10 @@ class Store():
         return list(map(lambda x: x["name"], self.data))
 
     def getShowByName(self, name):
-        return list(filter(lambda x: x["name"] == name, self.data))[0]
+        data = list(filter(lambda x: x["name"] == name, self.data))
+        if data:
+            return data[0]
+        return list(filter(lambda x: x["name"] == name, self.temporary_data))[0]
     
     def getShowById(self, show_id):
         return list(filter(lambda x: x["id"] == show_id, self.data))[0]
@@ -49,4 +52,23 @@ class Store():
                 break
 
     def set_temporary_data(self, data):
-        self.temporary_data = data
+        self.temporary_data = list(map(lambda x: x["show"], data))
+
+    def get_episodes_for_show(self, show_name):
+        for show in self.temporary_data:
+            if show["name"] == show_name:
+                if "episodes" in show:
+                    break 
+                url = urlopen("https://api.tvmaze.com/shows/%i/episodes" % show["id"]).read()
+                data = json.loads(url.decode("utf-8"))
+                show["episodes"] = data
+                
+                if not os.path.exists("cache/%i.jpg" % show["id"]):
+                    self.cacheImage(show["image"]["original"], "cache/%i.jpg" % show["id"])
+                break
+
+
+    def cacheImage(self, url, path):
+        response = urlopen(url)
+        with open(path, "wb") as img:
+            img.write(response.read())

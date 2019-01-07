@@ -21,7 +21,7 @@ class Search(Gtk.ListBox):
         
 
     def on_search_activate(self, entry):
-        url = urlopen("https://api.tvmaze.com/search/shows?q=" + entry.get_text()).read()
+        url = urlopen("https://api.tvmaze.com/search/shows?q=%s&embed=episodes" % entry.get_text()).read()
         data = json.loads(url.decode("utf-8"))
         self.show_results(data)
 

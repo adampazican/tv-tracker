@@ -12,6 +12,7 @@ class Store():
         
         with open("cache/store.json", "r") as store:
             self.data = json.loads(store.read())
+        self.temporary_data = []
 
     def save_store(self):
         with open("cache/store.json", "w") as store:
@@ -46,3 +47,6 @@ class Store():
                         self.save_store()
                         break
                 break
+
+    def set_temporary_data(self, data):
+        self.temporary_data = data

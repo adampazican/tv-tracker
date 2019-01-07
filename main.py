@@ -1,5 +1,3 @@
-from urllib.request import urlopen
-import json
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
@@ -7,10 +5,6 @@ from sidebar import Sidebar
 from showinfo import ShowInfo
 from store import Store
 
-
-def search_for_show(name):
-    url = urlopen('http://api.tvmaze.com/search/shows?q=' + name).read()
-    return json.loads(url.decode('utf-8'))
 
 class Application(Gtk.Window):
     def __init__(self):
@@ -25,8 +19,7 @@ class Application(Gtk.Window):
         box = Gtk.Box(Gtk.Orientation.HORIZONTAL)
 
         
-        sidebar = Sidebar()
-        sidebar.add_items(self.store.getShowNames())
+        sidebar = Sidebar(self.store)
         sidebar.connect("notify::selected-show", self.on_navigation_change)
 
         separator = Gtk.Separator()

@@ -90,8 +90,11 @@ class ShowInfo(Gtk.Box):
             self.rating.set_label("Rating: none")
 
     def set_summary(self, value):
-        summary_without_markdown = re.sub(r"<\/?[a-z+]>", "", value)
-        self.summary.set_label(summary_without_markdown)
+        if value == None:
+            self.summary.set_label("No summary for %s yet." % self.name.get_label()[6:])
+        else:
+            summary_without_markdown = re.sub(r"<\/?[a-z+]>", "", value)
+            self.summary.set_label(summary_without_markdown)
 
     def set_genre(self, value):
         genres_unlistified = re.sub(r"\[?']?", "", str(value))
@@ -113,4 +116,7 @@ class ShowInfo(Gtk.Box):
     def getImage(self):
         if os.path.exists("cache/%i.jpg" % self.id):
             pb = Pixbuf.new_from_file_at_scale(filename = "cache/%i.jpg" % self.id, width = 300, height = 300, preserve_aspect_ratio=True)
+            self.image.set_from_pixbuf(pb)
+        elif os.path.exists("cache/no-image.jpg"):
+            pb = Pixbuf.new_from_file_at_scale(filename = "cache/no-image.jpg", width = 300, height = 300, preserve_aspect_ratio=True)
             self.image.set_from_pixbuf(pb)

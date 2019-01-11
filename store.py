@@ -57,7 +57,7 @@ class Store():
     def set_temporary_data(self, data):
         self.temporary_data = list(map(lambda x: x["show"], data))
 
-    def get_episodes_for_show(self, show_name):
+    def fetch_episodes_for_show(self, show_name):
         for show in self.temporary_data:
             if show["name"] == show_name:
                 if "episodes" in show:
@@ -65,13 +65,17 @@ class Store():
                 url = urlopen("https://api.tvmaze.com/shows/%i/episodes" % show["id"]).read()
                 data = json.loads(url.decode("utf-8"))
                 show["episodes"] = data
-                
+
                 if not os.path.exists("cache/%i.jpg" % show["id"]):
-                    self.cacheImage(show["image"]["medium"], "cache/%i.jpg" % show["id"])
+                    if show["image"] != None:
+                        self.cacheImage(show["image"]["medium"], "cache/%i.jpg" % show["id"])
+                    else:
+                        self.cacheImage('https://static.tvmaze.com/images/no-img/no-img-portrait-text.png', "cache/no-image.jpg")
                 break
 
 
     def cacheImage(self, url, path):
         response = urlopen(url)
         with open(path, "wb") as img:
-            img.write(response.read())
+            if response.getcode() == 200:
+                img.write(response.read())

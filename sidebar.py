@@ -45,7 +45,7 @@ class Sidebar(Gtk.ScrolledWindow):
     def on_search_select(self, list_box, list_box_row):
         if list_box_row:
             show_name = list_box_row.get_child().get_children()[0].get_label()
-            self.store.get_episodes_for_show(show_name)
+            self.store.fetch_episodes_for_show(show_name)
             self.selected_show = show_name
             self.unselect_list(self.__list_box)
 

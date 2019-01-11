@@ -30,7 +30,7 @@ class Seasons(Gtk.Box):
 
             episode_list = Gtk.ListBox()
             episode_list.set_activate_on_single_click(True)
-            episode_list.set_selection_mode(Gtk.SelectionMode.MULTIPLE)
+            episode_list.set_selection_mode(Gtk.SelectionMode.NONE)
             episode_list.connect("row_activated", self.on_item_click)
 
             scrolled.add(episode_list)
@@ -42,7 +42,7 @@ class Seasons(Gtk.Box):
                 episode_list.add(label)
                 
                 if "watched" in episode and episode["watched"]:
-                    episode_list.select_row(episode_list.get_children()[-1])
+                    episode_list.get_children()[-1].get_style_context().add_class("episode-watched")
 
             self.stack.add_titled(scrolled, "Season %i" % season_number, "Season %i" % season_number)
 

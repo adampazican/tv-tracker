@@ -41,3 +41,7 @@ label{
 .seasons{
     margin-top: -16px;
 }
+
+.episode-watched{
+    background-color: red;
+}

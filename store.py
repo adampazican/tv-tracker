@@ -37,8 +37,24 @@ class Store():
                         episode["watched"] = episode.get("watched", False)
                         return episode["watched"]
 
+        for show in self.temporary_data:
+            if show["name"] == show_name:
+                for episode in show["episodes"]:
+                    if episode["name"] == episode_name:
+                        episode["watched"] = episode.get("watched", False)
+                        return episode["watched"]
+
     def set_episode_watched(self, show_name, episode_name, is_watched):
         for show in self.data:
+            if show["name"] == show_name:
+                for episode in show["episodes"]:
+                    if episode["name"] == episode_name:
+                        episode["watched"] = is_watched
+                        self.save_store()
+                        break
+                break
+
+        for show in self.temporary_data:
             if show["name"] == show_name:
                 for episode in show["episodes"]:
                     if episode["name"] == episode_name:

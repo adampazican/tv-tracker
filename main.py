@@ -14,11 +14,22 @@ class Application(Gtk.Window):
         self.set_default_size(1000, 600)
         self.load_css()
 
+        header_bar = Gtk.HeaderBar()
+        header_bar.set_show_close_button(True)
+        header_bar.props.title = "HeaderBar example"
+
+        search_button = Gtk.ToggleButton()
+        search_icon = Gtk.Image.new_from_icon_name("edit-find-symbolic", 4)
+
+        search_button.add(search_icon)
+        header_bar.pack_start(search_button)
+        self.set_titlebar(header_bar)
+
         self.store = Store()
 
         box = Gtk.Box(Gtk.Orientation.HORIZONTAL)
 
-        self.sidebar = Sidebar(self.store)
+        self.sidebar = Sidebar(self.store, search_button)
         self.sidebar.connect("notify::selected-show", self.on_navigation_change)
 
         separator = Gtk.Separator()

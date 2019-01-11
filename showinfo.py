@@ -68,9 +68,9 @@ class ShowInfo(Gtk.Box):
         episode_watched = self.store.get_episode_watched(self.store.get_show_by_id(self.id)["name"], episode_name)
 
         if not episode_watched:
-            list_box.select_row(list_box_row)
+            list_box_row.get_style_context().add_class("episode-watched")
         else:
-            list_box.unselect_row(list_box_row)
+            list_box_row.get_style_context().remove_class("episode-watched")
 
         self.store.set_episode_watched(
             self.store.get_show_by_id(self.id)["name"],

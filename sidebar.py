@@ -4,10 +4,12 @@ from search import Search
 class Sidebar(Gtk.ScrolledWindow):
     selected_show = GObject.Property(type=int, flags = GObject.ParamFlags.READWRITE)
 
-    def __init__(self, store):
+    def __init__(self, store, search_button):
         Gtk.ScrolledWindow.__init__(self, None, None)
         self.set_propagate_natural_width(True)
         self.store = store
+
+        search_button.connect("toggled", self.search_toggled)
         
         self.__list_box = Gtk.ListBox()
         self.__list_box.connect("row_selected", self.on_item_select)
@@ -15,7 +17,7 @@ class Sidebar(Gtk.ScrolledWindow):
 
         self.search = Search(self.store)
         self.search.get_listbox().connect("row_selected", self.on_search_select)
-        self.search.set_reveal_child(True)
+        
 
         listbox_row = Gtk.ListBoxRow()
         listbox_row.set_selectable(False)
@@ -30,6 +32,11 @@ class Sidebar(Gtk.ScrolledWindow):
 
         self.__list_box.select_row(
             self.__list_box.get_children()[1]
+        )
+
+    def search_toggled(self, search_button):
+        self.search.set_reveal_child(
+            not self.search.get_reveal_child()
         )
 
     def remove_item(self, show):

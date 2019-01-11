@@ -21,17 +21,19 @@ class Search(Gtk.ListBox):
         
 
     def on_search_activate(self, entry):
-        url = urlopen("https://api.tvmaze.com/search/shows?q=%s&embed=episodes" % entry.get_text()).read()
+        url = urlopen("https://api.tvmaze.com/search/shows?q=%s" % entry.get_text()).read()
         data = json.loads(url.decode("utf-8"))
-        self.show_results(data)
+        self.store.set_temporary_episodes(data)
 
-        self.store.set_temporary_data(data)
+        self.show_results(self.store.get_temporary_episodes())
 
     def show_results(self, shows):
         self.clean_up_search()
+
         for show in shows:
-            name = show["show"]["name"]
+            name = show["name"]
             row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            row.id = show["id"]
             row.get_style_context().add_class("row")
             row.pack_start(Gtk.Label(name, halign=Gtk.Align.START), False, False, 0)
             self.add(row)

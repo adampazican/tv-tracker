@@ -20,16 +20,10 @@ class Store():
                 json.dumps(self.data, indent=4, separators=(',', ': '))
             )
 
-    def getShowNames(self):
-        return list(map(lambda x: x["name"], self.data))
-
-    def getShowByName(self, name):
-        data = list(filter(lambda x: x["name"] == name, self.data))
-        if data:
-            return data[0]
-        return list(filter(lambda x: x["name"] == name, self.temporary_data))[0]
+    def get_shows(self):
+        return self.data
     
-    def getShowById(self, show_id):
+    def get_show_by_id(self, show_id):
         data = list(filter(lambda x: x["id"] == show_id, self.data))
         if data:
             return data[0]
@@ -54,12 +48,15 @@ class Store():
                         break
                 break
 
-    def set_temporary_data(self, data):
+    def set_temporary_episodes(self, data):
         self.temporary_data = list(map(lambda x: x["show"], data))
 
-    def fetch_episodes_for_show(self, show_name):
+    def get_temporary_episodes(self):
+        return self.temporary_data
+
+    def fetch_episodes_for_show(self, show_id):
         for show in self.temporary_data:
-            if show["name"] == show_name:
+            if show["id"] == show_id:
                 if "episodes" in show:
                     break 
                 url = urlopen("https://api.tvmaze.com/shows/%i/episodes" % show["id"]).read()

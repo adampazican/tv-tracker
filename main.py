@@ -32,7 +32,7 @@ class Application(Gtk.Window):
     
     def on_navigation_change(self, sidebar, selected_show_prop):
         selected_show_name = sidebar.get_property("selected_show") 
-        selected_show = self.store.getShowByName(selected_show_name)
+        selected_show = self.store.get_show_by_id(selected_show_name)
 
         self.mainframe.set_id(selected_show["id"])
         self.mainframe.set_name(selected_show["name"])

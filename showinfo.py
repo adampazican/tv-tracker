@@ -60,7 +60,7 @@ class ShowInfo(Gtk.Box):
         self.pack_start(self.seasons, True, True, 0)
 
     def on_episode_selected(self, seasons, episode_name, list_box, list_box_row):
-        episode_watched = self.store.get_episode_watched(self.store.getShowById(self.id)["name"], episode_name)
+        episode_watched = self.store.get_episode_watched(self.store.get_show_by_id(self.id)["name"], episode_name)
 
         if not episode_watched:
             list_box.select_row(list_box_row)
@@ -68,7 +68,7 @@ class ShowInfo(Gtk.Box):
             list_box.unselect_row(list_box_row)
 
         self.store.set_episode_watched(
-            self.store.getShowById(self.id)["name"],
+            self.store.get_show_by_id(self.id)["name"],
             episode_name,
             not episode_watched
         )
@@ -93,7 +93,7 @@ class ShowInfo(Gtk.Box):
         if value == None:
             self.summary.set_label("No summary for %s yet." % self.name.get_label()[6:])
         else:
-            summary_without_markdown = re.sub(r"<\/?[a-z+]>", "", value)
+            summary_without_markdown = re.sub(r"<\/?[a-z]+(?: \/)?>", "", value)
             self.summary.set_label(summary_without_markdown)
 
     def set_genre(self, value):

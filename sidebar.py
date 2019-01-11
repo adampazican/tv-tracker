@@ -14,7 +14,8 @@ class Sidebar(Gtk.ScrolledWindow):
         self.__list_box.get_style_context().add_class("sidebar")
 
         self.search = Search(self.store)
-        self.search.connect("row_selected", self.on_search_select)
+        self.search.get_listbox().connect("row_selected", self.on_search_select)
+        self.search.set_reveal_child(True)
 
         listbox_row = Gtk.ListBoxRow()
         listbox_row.set_selectable(False)
@@ -58,7 +59,7 @@ class Sidebar(Gtk.ScrolledWindow):
     def on_item_select(self, list_box, list_box_row):
         if list_box_row:
             self.selected_show = list_box_row.get_child().id
-            self.unselect_list(self.search)
+            self.unselect_list(self.search.get_listbox())
 
     def on_search_select(self, list_box, list_box_row):
         if list_box_row:

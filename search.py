@@ -2,14 +2,16 @@ from gi.repository import Gtk, GObject
 from urllib.request import urlopen
 import json
 
-class Search(Gtk.ListBox):
+class Search(Gtk.Revealer):
     __gsignals__ = {
         "on_search": (GObject.SIGNAL_RUN_FIRST, None, ())
     }
 
     def __init__(self, store):
-        Gtk.ListBox.__init__(self)
+        Gtk.Revealer.__init__(self)
         self.store = store
+        
+        self.listbox = Gtk.ListBox()
 
         entry = Gtk.Entry()
         entry.connect("activate", self.on_search_activate)
@@ -17,8 +19,11 @@ class Search(Gtk.ListBox):
         entry_row.set_selectable(False)
         entry_row.add(entry)
 
-        self.add(entry_row)
+        self.listbox.add(entry_row)
+        self.add(self.listbox)
         
+    def get_listbox(self):
+        return self.listbox
 
     def on_search_activate(self, entry):
         url = urlopen("https://api.tvmaze.com/search/shows?q=%s" % entry.get_text()).read()
@@ -36,14 +41,14 @@ class Search(Gtk.ListBox):
             row.id = show["id"]
             row.get_style_context().add_class("row")
             row.pack_start(Gtk.Label(name, halign=Gtk.Align.START), False, False, 0)
-            self.add(row)
+            self.listbox.add(row)
             
-        self.add(Gtk.Separator())
-        self.show_all()
+        self.listbox.add(Gtk.Separator())
+        self.listbox.show_all()
 
     def clean_up_search(self):
-        children = self.get_children()
+        children = self.listbox.get_children()
 
         for child in children:
             if child.get_index() > 0:
-                self.remove(child)
+                self.listbox.remove(child)

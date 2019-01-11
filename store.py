@@ -37,13 +37,12 @@ class Store():
                         episode["watched"] = episode.get("watched", False)
                         return episode["watched"]
 
-    #watched is boolean
-    def set_episode_watched(self, show_name, episode_name, watched):
+    def set_episode_watched(self, show_name, episode_name, is_watched):
         for show in self.data:
             if show["name"] == show_name:
                 for episode in show["episodes"]:
                     if episode["name"] == episode_name:
-                        episode["watched"] = watched
+                        episode["watched"] = is_watched
                         self.save_store()
                         break
                 break
@@ -65,14 +64,31 @@ class Store():
 
                 if not os.path.exists("cache/%i.jpg" % show["id"]):
                     if show["image"] != None:
-                        self.cacheImage(show["image"]["medium"], "cache/%i.jpg" % show["id"])
+                        self.cache_image(show["image"]["medium"], "cache/%i.jpg" % show["id"])
                     else:
-                        self.cacheImage('https://static.tvmaze.com/images/no-img/no-img-portrait-text.png', "cache/no-image.jpg")
+                        self.cache_image('https://static.tvmaze.com/images/no-img/no-img-portrait-text.png', "cache/no-image.jpg")
                 break
 
-
-    def cacheImage(self, url, path):
+    def cache_image(self, url, path):
         response = urlopen(url)
         with open(path, "wb") as img:
             if response.getcode() == 200:
                 img.write(response.read())
+
+    def is_show_subscribed(self, show_id):
+        for show in self.data:
+            if show["id"] == show_id:
+                return True
+        return False
+
+    def subscribe_show(self, show_id):
+        for show in self.temporary_data:
+            if show["id"] == show_id:
+                self.data.append(show)
+                self.save_store()
+
+    def unsubscribe_show(self, show_id):
+        for show in self.data:
+            if show["id"] == show_id:
+                self.data.remove(show)
+                self.save_store()

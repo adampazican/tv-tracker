@@ -6,6 +6,10 @@ import re
 import os
 
 class ShowInfo(Gtk.Box):
+    __gsignals__ = {
+        "subscription_changed": (GObject.SIGNAL_RUN_FIRST, None, (int, bool,))
+    }
+
     id = 0
     subscribed = True
 
@@ -26,7 +30,7 @@ class ShowInfo(Gtk.Box):
 
         
         self.image = Gtk.Image()
-        self.getImage()
+        self.get_image()
 
         wrapper.pack_start(self.image, False, False, 0)
         wrapper.pack_start(info_box_wrapper, False, False, 0)
@@ -42,8 +46,9 @@ class ShowInfo(Gtk.Box):
         self.summary.set_line_wrap(True)
 
         subscription = Gtk.Box()
-        subscription_button = Gtk.Button("Subscribe")
-        subscription.pack_start(subscription_button, False, False, 0)
+        self.subscription_button = Gtk.Button()
+        self.subscription_button.connect("clicked", self.on_subscribe_clicked)
+        subscription.pack_start(self.subscription_button, False, False, 0)
 
         info_box.pack_start(self.name, False, False, 0)
         info_box.pack_start(self.genre, False, False, 0)
@@ -78,7 +83,7 @@ class ShowInfo(Gtk.Box):
 
     def set_name(self, value):
         self.name.set_label("Name: %s" % value)
-        self.getImage()
+        self.get_image()
 
     def set_status(self, value):
         self.status.set_label("Status: %s" % value)
@@ -113,10 +118,31 @@ class ShowInfo(Gtk.Box):
 
         self.seasons.set_episodes(seasons)
 
-    def getImage(self):
+    def get_image(self):
+        path = ""
         if os.path.exists("cache/%i.jpg" % self.id):
-            pb = Pixbuf.new_from_file_at_scale(filename = "cache/%i.jpg" % self.id, width = 300, height = 300, preserve_aspect_ratio=True)
-            self.image.set_from_pixbuf(pb)
+            path = "cache/%i.jpg" % self.id
         elif os.path.exists("cache/no-image.jpg"):
-            pb = Pixbuf.new_from_file_at_scale(filename = "cache/no-image.jpg", width = 300, height = 300, preserve_aspect_ratio=True)
-            self.image.set_from_pixbuf(pb)
+            path = "cache/no-image.jpg"
+        else: 
+            return
+        pb = Pixbuf.new_from_file_at_scale(filename = path, width = 300, height = 300, preserve_aspect_ratio=True)
+        self.image.set_from_pixbuf(pb)
+
+    def set_subscribed(self, is_subscribed):
+        self.is_subscribed = is_subscribed
+
+        if is_subscribed:
+            self.subscription_button.set_label("UnSubscribe")
+        else:
+            self.subscription_button.set_label("Subscribe")
+
+    def on_subscribe_clicked(self, button):
+        if self.is_subscribed:
+            self.emit("subscription_changed", self.id, False)
+            self.store.unsubscribe_show(self.id)
+            self.set_subscribed(False)
+        else:
+            self.emit("subscription_changed", self.id, True)
+            self.store.subscribe_show(self.id)
+            self.set_subscribed(True)

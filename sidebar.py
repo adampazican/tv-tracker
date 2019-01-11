@@ -27,16 +27,33 @@ class Sidebar(Gtk.ScrolledWindow):
 
         self.add_items(self.store.get_shows())
 
+        self.__list_box.select_row(
+            self.__list_box.get_children()[1]
+        )
+
+    def remove_item(self, show):
+        for row in self.__list_box.get_children():
+            box = row.get_child()
+
+            if type(box) == Gtk.Box and box.id == show["id"]:
+                self.__list_box.remove(row)
+
+    def add_item(self, show):
+        row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        row.id = show["id"]
+        row.get_style_context().add_class("row")
+        row.pack_start(Gtk.Label(show["name"], halign=Gtk.Align.START), False, False, 0)
+        row.show_all()
+        self.__list_box.add(row)
+    
     def add_items(self, shows):
         for show in shows:
             row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             row.id = show["id"]
             row.get_style_context().add_class("row")
             row.pack_start(Gtk.Label(show["name"], halign=Gtk.Align.START), False, False, 0)
+            row.show_all()
             self.__list_box.add(row)
-        self.__list_box.select_row(
-            self.__list_box.get_children()[1]
-        )
 
     def on_item_select(self, list_box, list_box_row):
         if list_box_row:

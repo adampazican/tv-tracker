@@ -18,29 +18,39 @@ class Application(Gtk.Window):
 
         box = Gtk.Box(Gtk.Orientation.HORIZONTAL)
 
-        
-        sidebar = Sidebar(self.store)
-        sidebar.connect("notify::selected-show", self.on_navigation_change)
+        self.sidebar = Sidebar(self.store)
+        self.sidebar.connect("notify::selected-show", self.on_navigation_change)
 
         separator = Gtk.Separator()
-        self.mainframe = ShowInfo(self.store)
+        self.show_info = ShowInfo(self.store)
+        self.show_info.connect("subscription_changed", self.on_subscription_change)
 
-        box.pack_start(sidebar, False, False, 0)
+        box.pack_start(self.sidebar, False, False, 0)
         box.pack_start(separator, False, False, 0)
-        box.pack_start(self.mainframe, True, True, 0)
+        box.pack_start(self.show_info, True, True, 0)
         self.add(box)
+
+    def on_subscription_change(self, show_info_component, show_id, is_subscribed):
+        show = self.store.get_show_by_id(show_id)
+
+        if is_subscribed == True:
+            self.sidebar.add_item(show)
+        else:
+            self.sidebar.remove_item(show)
     
     def on_navigation_change(self, sidebar, selected_show_prop):
-        selected_show_name = sidebar.get_property("selected_show") 
-        selected_show = self.store.get_show_by_id(selected_show_name)
+        selected_show_id = sidebar.get_property("selected_show") 
+        selected_show = self.store.get_show_by_id(selected_show_id)
+        is_subscribed = self.store.is_show_subscribed(selected_show_id)
 
-        self.mainframe.set_id(selected_show["id"])
-        self.mainframe.set_name(selected_show["name"])
-        self.mainframe.set_status(selected_show["status"])
-        self.mainframe.set_rating(selected_show["rating"]["average"])
-        self.mainframe.set_summary(selected_show["summary"])
-        self.mainframe.set_genre(selected_show["genres"])
-        self.mainframe.set_episodes(selected_show["episodes"])
+        self.show_info.set_id(selected_show["id"])
+        self.show_info.set_name(selected_show["name"])
+        self.show_info.set_status(selected_show["status"])
+        self.show_info.set_rating(selected_show["rating"]["average"])
+        self.show_info.set_summary(selected_show["summary"])
+        self.show_info.set_genre(selected_show["genres"])
+        self.show_info.set_episodes(selected_show["episodes"])
+        self.show_info.set_subscribed(is_subscribed)
 
     def load_css(self):
         style_provider = Gtk.CssProvider()
@@ -56,4 +66,5 @@ class Application(Gtk.Window):
 if __name__ == "__main__":
     window = Application()
     window.show_all()
+    window.maximize()
     Gtk.main()

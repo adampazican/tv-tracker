@@ -37,7 +37,7 @@ class Seasons(Gtk.Box):
             scrolled.show_all()
 
             for episode in episodes:
-                label = Gtk.Label(episode["name"], halign=Gtk.Align.START)
+                label = Gtk.Label("%i. %s" % (episodes.index(episode)+1, episode["name"]), halign=Gtk.Align.START)
                 label.show()
                 episode_list.add(label)
                 
@@ -51,5 +51,5 @@ class Seasons(Gtk.Box):
             self.stack.remove(child)
 
     def on_item_click(self, list_box, list_box_row):
-        episode_name = list_box_row.get_children()[0].get_label()
+        episode_name = " ".join(list_box_row.get_children()[0].get_label().split()[1:])
         self.emit("episode_selected", episode_name, list_box, list_box_row)

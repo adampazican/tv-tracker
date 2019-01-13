@@ -50,7 +50,6 @@ class Store():
                 for episode in show["episodes"]:
                     if episode["name"] == episode_name:
                         episode["watched"] = is_watched
-                        self.save_store()
                         break
                 break
 
@@ -59,7 +58,6 @@ class Store():
                 for episode in show["episodes"]:
                     if episode["name"] == episode_name:
                         episode["watched"] = is_watched
-                        self.save_store()
                         break
                 break
 
@@ -101,13 +99,11 @@ class Store():
         for show in self.temporary_data:
             if show["id"] == show_id:
                 self.data.append(show)
-                self.save_store()
 
     def unsubscribe_show(self, show_id):
         for show in self.data:
             if show["id"] == show_id:
                 self.data.remove(show)
-                self.save_store()
 
     def update_show(self, show_id):
         pass

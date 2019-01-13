@@ -9,7 +9,7 @@ from store import Store
 class Application(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self)
-        self.connect("destroy", Gtk.main_quit)
+        self.connect("destroy", self.on_quit)
         self.set_default_size(1000, 600)
         self.load_css()
 
@@ -39,6 +39,10 @@ class Application(Gtk.Window):
         box.pack_start(separator, False, False, 0)
         box.pack_start(self.show_info, True, True, 0)
         self.add(box)
+
+    def on_quit(self, window):
+        self.store.save_store()
+        Gtk.main_quit()
 
     def on_subscription_change(self, show_info_component, show_id, is_subscribed):
         show = self.store.get_show_by_id(show_id)

@@ -48,7 +48,12 @@ class ShowInfo(Gtk.Box):
         subscription = Gtk.Box()
         self.subscription_button = Gtk.Button()
         self.subscription_button.connect("clicked", self.on_subscribe_clicked)
+        
+        self.update_button = Gtk.Button("Update")
+        self.update_button.connect("clicked", self.on_update_clicked)
+
         subscription.pack_start(self.subscription_button, False, False, 0)
+        subscription.pack_start(self.update_button, False, False, 8)
 
         info_box.pack_start(self.name, False, False, 0)
         info_box.pack_start(self.genre, False, False, 0)
@@ -86,7 +91,10 @@ class ShowInfo(Gtk.Box):
         self.get_image()
 
     def set_status(self, value):
-        self.status.set_label("Status: %s" % value)
+        if value:
+            self.status.set_label("Status: %s" % value)
+        else:
+            self.status.set_label("Status: none")
 
     def set_rating(self, value):
         if value:
@@ -102,8 +110,11 @@ class ShowInfo(Gtk.Box):
             self.summary.set_label(summary_without_markdown)
 
     def set_genre(self, value):
-        genres_unlistified = re.sub(r"\[?']?", "", str(value))
-        self.genre.set_label("Genre: %s" % genres_unlistified)
+        if value:
+            genres_unlistified = re.sub(r"\[?']?", "", str(value))
+            self.genre.set_label("Genre: %s" % genres_unlistified)
+        else:
+            self.genre.set_label("Genre: none")
 
     def set_episodes(self, episodes):
         seasons = {}
@@ -134,8 +145,10 @@ class ShowInfo(Gtk.Box):
 
         if is_subscribed:
             self.subscription_button.set_label("UnSubscribe")
+            self.update_button.show()
         else:
             self.subscription_button.set_label("Subscribe")
+            self.update_button.hide()
 
     def on_subscribe_clicked(self, button):
         if self.is_subscribed:
@@ -146,3 +159,6 @@ class ShowInfo(Gtk.Box):
             self.emit("subscription_changed", self.id, True)
             self.store.subscribe_show(self.id)
             self.set_subscribed(True)
+
+    def on_update_clicked(self, button):
+        self.store.update_show(self.id)

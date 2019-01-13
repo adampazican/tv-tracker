@@ -9,14 +9,13 @@ from store import Store
 class Application(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self)
-        self.title = "DDD"
         self.connect("destroy", Gtk.main_quit)
         self.set_default_size(1000, 600)
         self.load_css()
 
         header_bar = Gtk.HeaderBar()
         header_bar.set_show_close_button(True)
-        header_bar.props.title = "HeaderBar example"
+        header_bar.props.title = "TVTracker"
 
         search_button = Gtk.ToggleButton()
         search_icon = Gtk.Image.new_from_icon_name("edit-find-symbolic", 4)

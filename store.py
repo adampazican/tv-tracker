@@ -108,3 +108,6 @@ class Store():
             if show["id"] == show_id:
                 self.data.remove(show)
                 self.save_store()
+
+    def update_show(self, show_id):
+        pass

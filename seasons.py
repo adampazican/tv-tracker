@@ -25,6 +25,12 @@ class Seasons(Gtk.Box):
     def set_episodes(self, episodes):
         self.reset()
 
+        if not episodes.items():
+            no_episodes_label = Gtk.Label("No episodes are available yet!")
+            no_episodes_label.show()
+            self.stack.add_titled(no_episodes_label, "Season 1", "Season 1")
+            return
+
         for season_number, episodes in episodes.items():
             scrolled = Gtk.ScrolledWindow()
 

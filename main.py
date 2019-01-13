@@ -1,6 +1,7 @@
+import signal
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 from sidebar import Sidebar
 from showinfo import ShowInfo
 from store import Store
@@ -40,7 +41,7 @@ class Application(Gtk.Window):
         box.pack_start(self.show_info, True, True, 0)
         self.add(box)
 
-    def on_quit(self, window):
+    def on_quit(self, window=None):
         self.store.save_store()
         Gtk.main_quit()
 
@@ -79,6 +80,7 @@ class Application(Gtk.Window):
 
 if __name__ == "__main__":
     window = Application()
+    GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, window.on_quit)
     window.show_all()
     window.maximize()
     Gtk.main()

@@ -76,9 +76,9 @@ class Store():
                 data = json.loads(url.decode("utf-8"))
                 show["episodes"] = data
 
-                if not os.path.exists("cache/%i.jpg" % show["id"]):
+                if not os.path.exists("cache/%i.jpg" % show["id"]) or not os.path.exists("cache/temp_%i.jpg" % show["id"]):
                     if show["image"] != None:
-                        self.cache_image(show["image"]["medium"], "cache/%i.jpg" % show["id"])
+                        self.cache_image(show["image"]["medium"], "cache/temp_%i.jpg" % show["id"])
                     else:
                         self.cache_image('https://static.tvmaze.com/images/no-img/no-img-portrait-text.png', "cache/no-image.jpg")
                 break
@@ -99,11 +99,16 @@ class Store():
         for show in self.temporary_data:
             if show["id"] == show_id:
                 self.data.append(show)
+                if os.path.exists("cache/temp_%i.jpg" % show["id"]):
+                    os.rename("cache/temp_%i.jpg" % show["id"], "cache/%i.jpg" % show["id"])
 
     def unsubscribe_show(self, show_id):
         for show in self.data:
             if show["id"] == show_id:
                 self.data.remove(show)
+                self.temporary_data.append(show)
+                if os.path.exists("cache/%i.jpg" % show["id"]):
+                    os.rename("cache/%i.jpg" % show["id"], "cache/temp_%i.jpg" % show["id"])
 
     def update_show(self, show_id):
         pass

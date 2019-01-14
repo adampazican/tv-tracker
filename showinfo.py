@@ -133,6 +133,8 @@ class ShowInfo(Gtk.Box):
         path = ""
         if os.path.exists("cache/%i.jpg" % self.id):
             path = "cache/%i.jpg" % self.id
+        elif os.path.exists("cache/temp_%i.jpg" % self.id):
+            path = "cache/temp_%i.jpg" % self.id
         elif os.path.exists("cache/no-image.jpg"):
             path = "cache/no-image.jpg"
         else: 

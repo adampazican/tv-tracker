@@ -1,5 +1,7 @@
 import signal
+import glob
 import gi
+import os
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib
 from sidebar import Sidebar
@@ -43,6 +45,10 @@ class Application(Gtk.Window):
 
     def on_quit(self, window=None):
         self.store.save_store()
+
+        for filename in glob.glob("cache/temp_*.jpg"):
+            os.remove(filename)
+
         Gtk.main_quit()
 
     def on_subscription_change(self, show_info_component, show_id, is_subscribed):

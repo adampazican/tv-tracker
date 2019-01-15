@@ -163,4 +163,11 @@ class ShowInfo(Gtk.Box):
             self.set_subscribed(True)
 
     def on_update_clicked(self, button):
-        self.store.update_show(self.id)
+        updated_show = self.store.update_show(self.id)
+
+        self.set_name(updated_show["name"])
+        self.set_status(updated_show["status"])
+        self.set_rating(updated_show["rating"]["average"])
+        self.set_summary(updated_show["summary"])
+        self.set_genre(updated_show["genres"])
+        self.set_episodes(updated_show["episodes"])

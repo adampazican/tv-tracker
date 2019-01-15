@@ -84,6 +84,9 @@ class Store():
                 break
 
     def cache_image(self, url, path):
+        if os.path.exists(path):
+            return
+
         response = urlopen(url)
         with open(path, "wb") as img:
             if response.getcode() == 200:
@@ -111,4 +114,27 @@ class Store():
                     os.rename("cache/%i.jpg" % show["id"], "cache/temp_%i.jpg" % show["id"])
 
     def update_show(self, show_id):
-        pass
+        url = urlopen("http://api.tvmaze.com/shows/%i?embed=episodes" % show_id).read()
+        data = json.loads(url.decode("utf-8"))
+        data["episodes"] = data["_embedded"]["episodes"]
+        data.pop('_embedded', None)
+        
+        for show in self.data:
+            if show["id"] == show_id:
+                show["name"] = data["name"]
+                show["genres"] = data["genres"]
+                show["status"] = data["status"]
+                show["rating"] = data["rating"]
+                show["image"] = data["image"]
+                show["summary"] = data["summary"]
+                show["schedule"] = data["schedule"]
+
+                #update episodes
+                for i in range(0, len(data["episodes"])):
+                    if len(show["episodes"]) < i + 1:
+                        show["episodes"].append(data["episodes"][i])
+                    else:
+                        show["episodes"][i]["name"] = data["episodes"][i]["name"]
+                        show["episodes"][i]["season"] = data["episodes"][i]["season"]
+                        show["episodes"][i]["number"] = data["episodes"][i]["number"]
+                return show

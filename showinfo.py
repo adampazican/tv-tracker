@@ -138,7 +138,8 @@ class ShowInfo(Gtk.Box):
         elif os.path.exists("cache/no-image.jpg"):
             path = "cache/no-image.jpg"
         else: 
-            return
+            self.store.cache_image('https://static.tvmaze.com/images/no-img/no-img-portrait-text.png', "cache/no-image.jpg")
+            path = "cache/no-image.jpg"
         pb = Pixbuf.new_from_file_at_scale(filename = path, width = 300, height = 300, preserve_aspect_ratio=True)
         self.image.set_from_pixbuf(pb)
 

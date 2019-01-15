@@ -3,10 +3,6 @@ from urllib.request import urlopen
 import json
 
 class Search(Gtk.Revealer):
-    __gsignals__ = {
-        "on_search": (GObject.SIGNAL_RUN_FIRST, None, ())
-    }
-
     def __init__(self, store):
         Gtk.Revealer.__init__(self)
         self.store = store

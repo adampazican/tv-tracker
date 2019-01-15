@@ -68,6 +68,10 @@ class Store():
         return self.temporary_data
 
     def fetch_episodes_for_show(self, show_id):
+        for show in self.data:
+            if show["id"] == show_id:
+                return
+
         for show in self.temporary_data:
             if show["id"] == show_id:
                 if "episodes" in show:
@@ -128,6 +132,8 @@ class Store():
                 show["image"] = data["image"]
                 show["summary"] = data["summary"]
                 show["schedule"] = data["schedule"]
+
+                self.cache_image(show["image"]["medium"], "cache/%i.jpg" % show["id"])
 
                 #update episodes
                 for i in range(0, len(data["episodes"])):

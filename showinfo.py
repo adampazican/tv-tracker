@@ -94,13 +94,13 @@ class ShowInfo(Gtk.Box):
         if value:
             self.status.set_label("Status: %s" % value)
         else:
-            self.status.set_label("Status: none")
+            self.status.set_label("Status: None")
 
     def set_rating(self, value):
         if value:
             self.rating.set_label("Rating: %.1f" % value)
         else:
-            self.rating.set_label("Rating: none")
+            self.rating.set_label("Rating: None")
 
     def set_summary(self, value):
         if value == None:
@@ -114,7 +114,7 @@ class ShowInfo(Gtk.Box):
             genres_unlistified = re.sub(r"\[?']?", "", str(value))
             self.genre.set_label("Genre: %s" % genres_unlistified)
         else:
-            self.genre.set_label("Genre: none")
+            self.genre.set_label("Genre: None")
 
     def set_episodes(self, episodes):
         seasons = {}

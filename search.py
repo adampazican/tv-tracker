@@ -9,14 +9,21 @@ class Search(Gtk.Revealer):
         
         self.listbox = Gtk.ListBox()
 
-        entry = Gtk.Entry()
+        entry = Gtk.SearchEntry()
         entry.connect("activate", self.on_search_activate)
+
         entry_row = Gtk.ListBoxRow()
+        entry_row.get_style_context().add_class("row")
         entry_row.set_selectable(False)
         entry_row.add(entry)
 
         self.listbox.add(entry_row)
-        self.add(self.listbox)
+
+
+        self.contain = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+        self.contain.add(self.listbox)
+
+        self.add(self.contain)
         
     def get_listbox(self):
         return self.listbox
@@ -39,8 +46,9 @@ class Search(Gtk.Revealer):
             row.pack_start(Gtk.Label(name, halign=Gtk.Align.START), False, False, 0)
             self.listbox.add(row)
             
-        self.listbox.add(Gtk.Separator())
-        self.listbox.show_all()
+        if len(shows) > 0:
+            self.contain.add(Gtk.Separator())
+        self.contain.show_all()
 
     def clean_up_search(self):
         children = self.listbox.get_children()
@@ -48,3 +56,7 @@ class Search(Gtk.Revealer):
         for child in children:
             if child.get_index() > 0:
                 self.listbox.remove(child)
+        
+        for child in self.contain.get_children():
+            if not type(child) == Gtk.ListBox:
+                self.contain.remove(child)

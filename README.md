@@ -2,6 +2,15 @@
 
 TVtracker je aplikácia, ktorá slúži na vyhľadávanie seriálov a zaznamenávanie zhliadnutých epizód 
 
+![alt img](https://osmijanko.fri.uniza.sk/pazican2/tv-tracker/raw/master/img.png)
+
+## Instructions
+
+Pre zapnutie programu otvorte terminal v zložke s projektom a zadajte príkaz:
+```
+python3 main.py
+```
+
 ## Dependencies
 
 - python 3.5

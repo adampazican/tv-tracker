@@ -7,12 +7,15 @@ class Store():
         if not os.path.exists("cache"):
             os.mkdir("cache")
         
+        self.temporary_data = []
+
         if not os.path.exists("cache/store.json"):
-            with open("cache/store.json", "w"): pass
+            with open("cache/store.json", "w"): 
+                self.data = []
+                return
         
         with open("cache/store.json", "r") as store:
             self.data = json.loads(store.read())
-        self.temporary_data = []
 
     def save_store(self):
         with open("cache/store.json", "w") as store:

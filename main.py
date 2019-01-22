@@ -1,7 +1,7 @@
 import signal
 import glob
-import gi
 import os
+import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib
 from sidebar import Sidebar
@@ -60,6 +60,7 @@ class Application(Gtk.Window):
             self.sidebar.remove_item(show)
     
     def on_navigation_change(self, sidebar, selected_show_prop):
+
         selected_show_id = sidebar.get_property("selected_show") 
         selected_show = self.store.get_show_by_id(selected_show_id)
         is_subscribed = self.store.is_show_subscribed(selected_show_id)

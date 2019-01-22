@@ -10,8 +10,8 @@ class ShowInfo(Gtk.Box):
         "subscription_changed": (GObject.SIGNAL_RUN_FIRST, None, (int, bool,))
     }
 
-    id = 0
-    subscribed = True
+    id = None
+    subscribed = None
 
     def __init__(self, store):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
@@ -30,7 +30,6 @@ class ShowInfo(Gtk.Box):
 
         
         self.image = Gtk.Image()
-        self.get_image()
 
         wrapper.pack_start(self.image, False, False, 0)
         wrapper.pack_start(info_box_wrapper, False, False, 0)
@@ -44,6 +43,7 @@ class ShowInfo(Gtk.Box):
         self.summ.get_style_context().add_class("summary")
         self.summary = Gtk.Label(halign=Gtk.Align.START)
         self.summary.set_line_wrap(True)
+        self.no_shows_notice = Gtk.Label("No shows subscribed yet, try search button!", halign=Gtk.Align.START)
 
         subscription = Gtk.Box()
         self.subscription_button = Gtk.Button()
@@ -51,6 +51,7 @@ class ShowInfo(Gtk.Box):
         
         self.update_button = Gtk.Button("Update")
         self.update_button.connect("clicked", self.on_update_clicked)
+        self.update_button.connect("show", self.on_show)
 
         subscription.pack_start(self.subscription_button, False, False, 0)
         subscription.pack_start(self.update_button, False, False, 8)
@@ -62,12 +63,21 @@ class ShowInfo(Gtk.Box):
         info_box.pack_start(self.summ, False, False, 0)
         info_box.pack_start(self.summary, False, False, 0)
         info_box.pack_start(subscription, False, False, 0)
+        info_box.pack_start(self.no_shows_notice, True, False, 0)
 
         self.seasons = Seasons()
         self.seasons.connect("episode_selected", self.on_episode_selected)
 
         self.pack_start(wrapper, False, True, 0)
         self.pack_start(self.seasons, True, True, 0)
+
+    def on_show(self, button):
+        if not self.id:
+            self.update_button.hide()
+            self.subscription_button.hide()
+            self.no_shows_notice.show()
+        else:
+            self.no_shows_notice.hide()
 
     def on_episode_selected(self, seasons, episode_name, list_box, list_box_row):
         episode_watched = self.store.get_episode_watched(self.store.get_show_by_id(self.id)["name"], episode_name)
@@ -85,6 +95,9 @@ class ShowInfo(Gtk.Box):
 
     def set_id(self, value):
         self.id = value
+        self.update_button.show()
+        self.subscription_button.show()
+        self.no_shows_notice.hide()
 
     def set_name(self, value):
         self.name.set_label("Name: %s" % value)

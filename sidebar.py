@@ -26,11 +26,12 @@ class Sidebar(Gtk.ScrolledWindow):
 
         self.add(container)
 
-        self.add_items(self.store.get_shows())
-
-        self.__list_box.select_row(
-            self.__list_box.get_children()[1]
-        )
+        shows = self.store.get_shows()
+        if shows:
+            self.add_items(shows)
+            self.__list_box.select_row(
+                self.__list_box.get_children()[0]
+            )
 
     def search_toggled(self, search_button):
         self.search.set_reveal_child(

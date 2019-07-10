@@ -2,7 +2,7 @@
 
 TVtracker je aplikácia, ktorá slúži na vyhľadávanie seriálov a zaznamenávanie zhliadnutých epizód 
 
-![alt img](https://osmijanko.fri.uniza.sk/pazican2/tv-tracker/raw/master/img.png)
+![alt img](https://raw.githubusercontent.com/adampazican/tv-tracker/master/img.png)
 
 ## Instructions
 
